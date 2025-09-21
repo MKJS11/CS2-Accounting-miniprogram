@@ -1,0 +1,176 @@
+<!--index.wxml-->
+<view class="container">
+  <!-- 需要登录提示 -->
+  <view wx:if="{{needLogin}}" class="login-tip">
+    <view class="tip-box">
+      <text class="tip-icon">🔒</text>
+      <text class="tip-title">请先登录</text>
+      <text class="tip-desc">登录后才能使用记账功能</text>
+      <button class="login-btn" bindtap="goToRecords">
+        去登录
+      </button>
+    </view>
+  </view>
+
+  <!-- 主内容区域 -->
+  <view wx:else>
+    <!-- 余额卡片 -->
+  <view class="balance-card">
+    <view class="balance-title">steam</view>
+    
+    <!-- 加载中的骨架屏 -->
+    <view wx:if="{{isLoading || !dataLoaded}}" class="balance-skeleton">
+      <view class="balance-main skeleton">
+        <view class="skeleton-text large"></view>
+      </view>
+      <view class="balance-sub skeleton">
+        <view class="skeleton-text medium"></view>
+      </view>
+      <view class="balance-rate skeleton">
+        <view class="skeleton-text small"></view>
+      </view>
+    </view>
+    
+    <!-- 实际数据 -->
+    <view wx:else class="balance-content">
+      <view class="balance-main">
+        <text class="currency-symbol">$</text>
+        <text class="balance-amount">{{balance.total_usd_balance}}</text>
+      </view>
+      <view class="balance-sub">
+        <text>人民币成本：¥{{balance.total_rmb_cost}}</text>
+      </view>
+      <view class="balance-rate">
+        <text>平均汇率：{{balance.avg_exchange_rate}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快速操作 -->
+  <view class="quick-actions">
+    <button class="action-btn recharge-btn" bindtap="goToRecharge">
+      <text class="btn-icon">+</text>
+      <text>记录</text>
+    </button>
+    <button class="action-btn purchase-btn" bindtap="goToPurchase">
+      <text class="btn-icon">-</text>
+      <text>出货</text>
+    </button>
+  </view>
+
+  <!-- 最近交易 -->
+  <view class="recent-section">
+    <view class="section-header">
+      <text class="section-title">最近交易</text>
+      <text class="view-all" bindtap="goToRecords">查看全部 ></text>
+    </view>
+    
+    <view class="transaction-list">
+      <!-- 加载中的交易记录骨架屏 -->
+      <view wx:if="{{isLoading || !dataLoaded}}" class="transaction-skeleton">
+        <view class="transaction-item-skeleton" wx:for="{{[1,2,3]}}" wx:key="index">
+          <view class="trans-left">
+            <view class="skeleton-text small"></view>
+            <view class="skeleton-text medium"></view>
+          </view>
+          <view class="trans-right">
+            <view class="skeleton-text small"></view>
+            <view class="skeleton-text tiny"></view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 实际交易数据 -->
+      <view wx:else>
+        <block wx:for="{{recentTransactions}}" wx:key="index">
+          <view class="transaction-item {{item.expanded ? 'expanded' : ''}}" bindtap="toggleTransactionDetail" data-index="{{index}}">
+            <!-- 基础信息行 -->
+            <view class="trans-basic">
+              <view class="trans-left">
+                <view class="trans-type {{item.type}}">
+                  {{item.type === 'recharge' ? '充值' : (item.type === 'sell' ? '卖出' : '购买')}}
+                </view>
+                <view class="trans-brief">
+                  <text wx:if="{{item.type === 'recharge'}}" class="brief-text">
+                    Steam 钱包充值
+                  </text>
+                  <text wx:else class="brief-text">
+                    {{item.item_name}}
+                  </text>
+                </view>
+              </view>
+              <view class="trans-right">
+                <view class="trans-amount {{item.type}}">
+                  <text wx:if="{{item.type === 'recharge'}}">+${{item.usd_amount}}</text>
+                  <text wx:elif="{{item.type === 'sell'}}">+¥{{item.total_sell_price_cny || item.unit_sell_price_cny}}</text>
+                  <text wx:else>-${{item.display_total_price || item.usd_price}}</text>
+                </view>
+                <view class="expand-icon {{item.expanded ? 'rotated' : ''}}">▼</view>
+              </view>
+            </view>
+            
+            <!-- 详细信息（可折叠） -->
+            <view class="trans-detail {{item.expanded ? 'show' : ''}}">
+              <view class="detail-content">
+                <!-- 充值详情 -->
+                <view wx:if="{{item.type === 'recharge'}}" class="detail-row">
+                  <text class="detail-label">人民币金额：</text>
+                  <text class="detail-value">¥{{item.rmb_amount}}</text>
+                </view>
+                <view wx:if="{{item.type === 'recharge'}}" class="detail-row">
+                  <text class="detail-label">汇率：</text>
+                  <text class="detail-value">{{item.exchange_rate}}</text>
+                </view>
+                
+                <!-- 购买/卖出详情 -->
+                <view wx:if="{{item.type !== 'recharge' && item.item_type}}" class="detail-row">
+                  <text class="detail-label">物品类型：</text>
+                  <view class="item-type-tag-detail">
+                    <text class="type-icon-detail">{{item.item_type_icon}}</text>
+                    <text class="type-text-detail">{{item.item_type_label}}</text>
+                  </view>
+                </view>
+                <view wx:if="{{item.type === 'purchase'}}" class="detail-row">
+                  <text class="detail-label">数量：</text>
+                  <text class="detail-value">{{item.quantity || 1}}</text>
+                </view>
+                <view wx:if="{{item.type === 'purchase'}}" class="detail-row">
+                  <text class="detail-label">单价：</text>
+                  <text class="detail-value">${{item.display_unit_price}} (¥{{item.unit_rmb_cost}})</text>
+                </view>
+                <view wx:if="{{item.type === 'purchase'}}" class="detail-row">
+                  <text class="detail-label">总价：</text>
+                  <text class="detail-value">${{item.display_total_price}} (¥{{item.rmb_cost}})</text>
+                </view>
+                <!-- 卖出记录详情 -->
+                <view wx:if="{{item.type === 'sell'}}" class="detail-row">
+                  <text class="detail-label">购买成本：</text>
+                  <text class="detail-value">${{item.total_purchase_price}} (¥{{item.total_purchase_price_cny}})</text>
+                </view>
+                <view wx:if="{{item.type === 'sell'}}" class="detail-row">
+                  <text class="detail-label">卖出价格：</text>
+                  <text class="detail-value">¥{{item.total_sell_price_cny}}</text>
+                </view>
+                <view wx:if="{{item.type === 'sell' && item.remark}}" class="detail-row">
+                  <text class="detail-label">备注：</text>
+                  <text class="detail-value">{{item.remark}}</text>
+                </view>
+                
+                <!-- 时间信息 -->
+                <view class="detail-row">
+                  <text class="detail-label">交易时间：</text>
+                  <text class="detail-value time">{{item.timeStr}}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </block>
+        
+        <view wx:if="{{recentTransactions.length === 0}}" class="empty-state">
+          <text>暂无交易记录</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  </view>
+</view>

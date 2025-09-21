@@ -1,0 +1,364 @@
+<!--pages/inventory/inventory.wxml-->
+<view class="inventory-container" bindtap="closeFilterDropdown">
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载库存中...</text>
+  </view>
+
+  <!-- 库存概览 -->
+  <view wx:else class="overview-section">
+    <view class="summary-card">
+      <view class="summary-header">
+        <text class="summary-title">📦 库存概览</text>
+        <text class="summary-subtitle">当前持有物品统计</text>
+      </view>
+      
+      <view class="summary-stats">
+        <view class="stat-item">
+          <text class="stat-label">物品数量</text>
+          <text class="stat-value">{{totalInventory.totalItems}} 件</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-label">美元成本</text>
+          <text class="stat-value">${{totalInventory.totalUsdCost}}</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-label">人民币成本</text>
+          <text class="stat-value">¥{{totalInventory.totalRmbCost}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 库存列表 -->
+  <view wx:if="{{!loading}}" class="inventory-section">
+    <!-- 搜索框 -->
+    <view class="search-container">
+      <view class="search-box">
+        <view class="search-icon">🔍</view>
+        <input 
+          class="search-input" 
+          type="text" 
+          placeholder="搜索物品名称或类型..." 
+          value="{{searchKeyword}}" 
+          bindinput="onSearchInput"
+          bindconfirm="onSearchConfirm"
+          confirm-type="search"
+        />
+        <view wx:if="{{searchKeyword}}" class="search-clear" bindtap="clearSearch">×</view>
+      </view>
+    </view>
+    
+    <view class="section-header">
+      <text class="section-title">🎒 我的库存</text>
+      <text class="section-count">{{filteredInventoryList.length}} 种物品</text>
+      
+      <view class="header-controls">
+        <!-- 分类筛选 -->
+        <view class="filter-dropdown" catchtap="stopPropagation">
+          <button class="filter-btn" bindtap="toggleFilterDropdown">
+            <text class="filter-icon {{showFilterDropdown ? 'rotate' : ''}}">🔽</text>
+            <text class="filter-text">分类</text>
+          </button>
+          <!-- 下拉选择框 -->
+          <view class="filter-dropdown-content {{showFilterDropdown ? 'show' : ''}}" catchtap="stopPropagation">
+            <view 
+              class="filter-dropdown-option {{selectedFilter === 'all' ? 'active' : ''}}"
+              data-filter="all"
+              bindtap="selectFilter"
+            >
+              <text class="filter-option-icon">📦</text>
+              <text class="filter-option-text">全部</text>
+              <text class="filter-option-count">({{allItemTypes.all}})</text>
+            </view>
+            
+            <view 
+              wx:for="{{availableTypes}}" 
+              wx:key="type"
+              class="filter-dropdown-option {{selectedFilter === item.type ? 'active' : ''}}"
+              data-filter="{{item.type}}"
+              bindtap="selectFilter"
+            >
+              <text class="filter-option-icon">{{item.icon}}</text>
+              <text class="filter-option-text">{{item.label}}</text>
+              <text class="filter-option-count">({{item.count}})</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 排序选择 -->
+        <view class="sort-dropdown" catchtap="stopPropagation">
+          <button class="sort-btn" bindtap="toggleSortDropdown">
+            <text class="sort-icon {{showSortDropdown ? 'rotate' : ''}}">🔽</text>
+            <text class="sort-text">排序</text>
+          </button>
+          <!-- 排序下拉选择框 -->
+          <view class="sort-dropdown-content {{showSortDropdown ? 'show' : ''}}" catchtap="stopPropagation">
+            <view 
+              wx:for="{{sortOptions}}" 
+              wx:key="key"
+              class="sort-dropdown-option {{selectedSort === item.key ? 'active' : ''}}"
+              data-sort="{{item.key}}"
+              bindtap="selectSort"
+            >
+              <text class="sort-option-icon">{{item.icon}}</text>
+              <text class="sort-option-text">{{item.label}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:if="{{filteredInventoryList.length === 0}}" class="empty-state">
+      <text class="empty-icon">📭</text>
+      <text class="empty-title">{{selectedFilter === 'all' ? '暂无库存' : '该分类暂无物品'}}</text>
+      <text class="empty-desc">{{selectedFilter === 'all' ? '快去购买一些物品吧！' : '尝试切换其他分类查看'}}</text>
+      <button wx:if="{{selectedFilter === 'all'}}" class="empty-btn" bindtap="goToPurchase">去购买</button>
+    </view>
+
+    <!-- 库存物品列表 -->
+    <view wx:else class="inventory-list">
+      <view 
+        wx:for="{{filteredInventoryList}}" 
+        wx:key="_id" 
+        class="inventory-item"
+        data-item="{{item}}"
+        bindtap="showItemDetail"
+      >
+        <view class="item-header">
+          <view class="item-info">
+            <text class="item-name">{{item.item_name}}</text>
+            <text class="item-type">{{item.displayType}}</text>
+          </view>
+          <view class="item-quantity">
+            <text class="quantity-text">×{{item.remaining_quantity}}</text>
+          </view>
+        </view>
+
+        <!-- 重新设计的成本信息显示 -->
+        <view class="item-costs">
+          <view class="cost-item primary-item">
+            <text class="cost-label">平均单价</text>
+            <text class="cost-value avg-price">¥{{item.avg_rmb_unit_price}} (${{item.avg_unit_price}})</text>
+          </view>
+          <view class="cost-item">
+            <text class="cost-label">成本总价</text>
+            <text class="cost-value total-cost">¥{{item.total_rmb_cost}} (${{item.total_usd_cost}})</text>
+          </view>
+          <view class="cost-item">
+            <text class="cost-label">购买时间</text>
+            <text class="cost-value purchase-time">{{item.first_purchase_time}}</text>
+          </view>
+        </view>
+
+        <view class="item-actions" catchtap="true">
+          <button 
+            class="action-btn sell-btn" 
+            data-item="{{item}}"
+            catchtap="quickSell"
+          >
+            出货
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 物品详情弹窗 -->
+<view wx:if="{{showDetail}}" class="detail-modal" bindtap="closeDetail">
+  <view class="detail-content" catchtap="true">
+    <button class="close-btn" bindtap="closeDetail">×</button>
+    <view class="detail-header">
+      <view class="detail-title-group">
+        <text class="detail-title">{{selectedItem.item_name}}</text>
+        <text class="detail-subtitle">{{selectedItem.displayType}}</text>
+      </view>
+    </view>
+    
+    <view class="detail-body">
+      <!-- 核心信息卡片 -->
+      <view class="detail-summary-card">
+        <view class="summary-item">
+          <text class="summary-label">库存数量</text>
+          <text class="summary-value primary">{{selectedItem.remaining_quantity}} 件</text>
+        </view>
+        <view class="summary-divider"></view>
+        <view class="summary-item">
+          <text class="summary-label">总价值</text>
+          <text class="summary-value secondary">¥{{selectedItem.total_rmb_cost}}</text>
+        </view>
+      </view>
+
+      <!-- 详细信息 -->
+      <view class="detail-section">
+        <text class="section-title">💰 成本信息</text>
+        <view class="detail-row">
+          <text class="detail-label">平均单价</text>
+          <text class="detail-value">¥{{selectedItem.avg_rmb_unit_price}} (${{selectedItem.avg_unit_price}})</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">美元成本</text>
+          <text class="detail-value">${{selectedItem.total_usd_cost}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">人民币成本</text>
+          <text class="detail-value">¥{{selectedItem.total_rmb_cost}}</text>
+        </view>
+      </view>
+
+      <view class="detail-section">
+        <text class="section-title">📅 时间信息</text>
+        <view class="detail-row">
+          <text class="detail-label">首次购买</text>
+          <text class="detail-value">{{selectedItem.first_purchase_time}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">最后购买</text>
+          <text class="detail-value">{{selectedItem.last_purchase_time}}</text>
+        </view>
+      </view>
+
+      <!-- 购买记录详情 -->
+      <view class="detail-section" wx:if="{{selectedItem.purchase_records && selectedItem.purchase_records.length > 1}}">
+        <text class="section-title">📋 购买记录详情</text>
+        <view class="purchase-records-list">
+          <view class="purchase-record-item" wx:for="{{selectedItem.purchase_records}}" wx:key="id" wx:if="{{item.remaining_quantity > 0}}">
+            <view class="record-header">
+              <view class="record-info">
+                <text class="record-date">{{item.purchase_time}}</text>
+                <text class="record-remaining">剩余：{{item.remaining_quantity}}/{{item.quantity}}</text>
+              </view>
+            </view>
+            <view class="record-cost-grid">
+              <view class="cost-item">
+                <text class="cost-label">单价</text>
+                <text class="cost-value">¥{{item.unit_price_cny}}</text>
+              </view>
+              <view class="cost-item">
+                <text class="cost-label">剩余成本</text>
+                <text class="cost-value">¥{{item.remaining_cost_cny}}</text>
+              </view>
+            </view>
+            <button 
+              class="record-sell-btn" 
+              data-record="{{item}}"
+              bindtap="sellSpecificRecord"
+            >
+              卖出此批次
+            </button>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="detail-actions">
+      <button 
+        class="detail-action-btn sell" 
+        data-item="{{selectedItem}}"
+        bindtap="quickSell"
+      >
+        💰 出货
+      </button>
+    </view>
+  </view>
+</view>
+
+<!-- 卖出弹窗 -->
+<view class="sell-modal {{showSellModal ? 'show' : ''}}" catchtap="closeSellModal">
+  <view class="sell-modal-content" catchtap="stopPropagation">
+    <!-- 头部 -->
+    <view class="sell-modal-header">
+      <text class="sell-modal-title">售出</text>
+      <text class="sell-modal-close" bindtap="closeSellModal">×</text>
+    </view>
+    
+    <!-- 物品信息 -->
+    <view class="sell-item-info" wx:if="{{selectedSellItem}}">
+      <view class="sell-item-details">
+        <view class="sell-item-name">{{selectedSellItem.item_name}}</view>
+        <view class="sell-item-type">{{selectedSellItem.displayType}}</view>
+      </view>
+      
+      <!-- 批次信息提示 -->
+      <view class="batch-info" wx:if="{{selectedSellItem.purchase_ids && selectedSellItem.purchase_ids.length === 1}}">
+        <text class="batch-label">🏷️ 选定批次</text>
+        <text class="batch-desc">正在卖出特定购买批次的物品</text>
+      </view>
+      
+      <view class="sell-item-stats">
+        <view class="sell-item-stock">库存：{{selectedSellItem.remaining_quantity}}</view>
+        <view class="sell-item-cost">成本：¥{{selectedSellItem.avg_cost_cny || selectedSellItem.avg_rmb_unit_price}}</view>
+      </view>
+    </view>
+    
+    <!-- 卖出表单 -->
+    <view class="sell-form" wx:if="{{selectedSellItem}}">
+      <!-- 卖出单价 -->
+      <view class="form-item">
+        <text class="form-label">卖出单价（¥）</text>
+        <input 
+          class="price-input" 
+          type="digit" 
+          placeholder="请输入卖出单价" 
+          value="{{sellPrice}}" 
+          bindinput="onPriceInput" 
+        />
+      </view>
+      
+      <!-- 卖出数量 -->
+      <view class="form-item">
+        <text class="form-label">卖出数量</text>
+        <view class="quantity-input">
+          <text class="quantity-btn" bindtap="decreaseQuantity">-</text>
+          <input class="quantity-value" type="number" placeholder="请输入数量" value="{{sellQuantity}}" bindinput="onQuantityInput" />
+          <text class="quantity-btn" bindtap="increaseQuantity">+</text>
+        </view>
+      </view>
+      
+      <!-- 利润预览 -->
+      <view class="profit-preview" wx:if="{{profitPreview.show}}">
+        <view class="profit-summary">
+          <view class="profit-main">
+            <text class="profit-main-label">预计利润</text>
+            <text class="profit-main-value {{profitPreview.profit >= 0 ? 'profit-positive' : 'profit-negative'}}">
+              ¥{{profitPreview.profit}}
+            </text>
+          </view>
+          <view class="profit-rate">
+            <text class="profit-rate-label">利润率</text>
+            <text class="profit-rate-value {{profitPreview.profitRate >= 0 ? 'profit-positive' : 'profit-negative'}}">
+              {{profitPreview.profitRate}}%
+            </text>
+          </view>
+        </view>
+        <view class="profit-details">
+          <view class="profit-detail-item">
+            <text class="profit-detail-label">卖出价</text>
+            <text class="profit-detail-value">¥{{profitPreview.totalSellPrice}}</text>
+          </view>
+          <view class="profit-detail-item">
+            <text class="profit-detail-label">成本</text>
+            <text class="profit-detail-value">¥{{profitPreview.totalCost}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 操作按钮 -->
+    <view class="sell-actions">
+      <button class="sell-btn-cancel" bindtap="closeSellModal">取消</button>
+      <button 
+        class="sell-btn-confirm {{canSubmitSell ? '' : 'disabled'}}" 
+        bindtap="confirmSell"
+        disabled="{{!canSubmitSell}}"
+      >
+        确认卖出
+      </button>
+    </view>
+  </view>
+</view>
+
+

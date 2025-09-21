@@ -1,0 +1,170 @@
+<!--purchase.wxml-->
+<view class="page">
+  <!-- 顶部标题区域 -->
+  <view class="header">
+    <view class="header-content">
+      <text class="header-title">购买物品</text>
+      <text class="header-subtitle">添加新的购买记录</text>
+    </view>
+    <view class="header-decoration"></view>
+  </view>
+
+  <!-- 主内容区域 -->
+  <view class="main-content">
+    <!-- 物品信息卡片 -->
+    <view class="card item-card">
+      <view class="card-header">
+        <view class="card-icon">🛒</view>
+        <view class="card-title">物品信息</view>
+      </view>
+      
+      <view class="input-group">
+        <view class="input-label">
+          <text class="label-text">物品种类</text>
+          <text class="label-icon">📦</text>
+        </view>
+        <picker 
+          mode="selector" 
+          range="{{itemTypes}}" 
+          range-key="label"
+          value="0"
+          bindchange="onItemTypeChange"
+          class="modern-picker"
+        >
+          <view class="picker-container">
+            <view class="picker-content">
+              <text class="picker-icon">{{selectedItemType.icon}}</text>
+              <text class="picker-text">{{selectedItemType.label}}</text>
+            </view>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 自定义类型输入框 -->
+      <view class="input-group" wx:if="{{showCustomInput}}">
+        <view class="input-label">
+          <text class="label-text">自定义类型</text>
+          <text class="label-icon">✏️</text>
+        </view>
+        <view class="input-container">
+          <input 
+            type="text" 
+            class="modern-input"
+            placeholder="请输入自定义物品类型"
+            value="{{customTypeInput}}"
+            bindinput="onCustomTypeInput"
+          />
+        </view>
+      </view>
+
+      <view class="input-group">
+        <view class="input-label">
+          <text class="label-text">物品名称</text>
+          <text class="label-icon">🏷️</text>
+        </view>
+        <view class="input-container">
+          <input 
+            type="text" 
+            class="modern-input"
+            placeholder="请输入物品名称"
+            value="{{itemName}}"
+            bindinput="onItemNameInput"
+          />
+        </view>
+      </view>
+    </view>
+
+    <!-- 价格信息卡片 -->
+    <view class="card price-card">
+      <view class="card-header">
+        <view class="card-icon">💰</view>
+        <view class="card-title">价格信息</view>
+      </view>
+      
+      <!-- 数量和单价左右排列 -->
+      <view class="price-input-row">
+        <view class="price-input-item">
+          <view class="input-label">
+            <text class="label-text">数量</text>
+            <text class="label-icon">🔢</text>
+          </view>
+          <view class="quantity-input-container">
+            <input 
+              type="number"
+              class="quantity-input"
+              placeholder="请输入数量"
+              value="{{quantity}}"
+              bindinput="onQuantityInput"
+            />
+            <text class="unit-text">个</text>
+          </view>
+        </view>
+
+        <view class="price-input-item">
+          <view class="input-label">
+            <text class="label-text">单价 (美元)</text>
+            <text class="label-icon">💲</text>
+          </view>
+          <view class="price-input-container">
+            <text class="currency-symbol">$</text>
+            <input 
+              type="digit"
+              class="price-input"
+              placeholder="0.00"
+              value="{{usdPrice}}"
+              bindinput="onUsdPriceInput"
+            />
+          </view>
+        </view>
+      </view>
+
+      <!-- 人民币成本显示 -->
+      <view class="rmb-cost-section" wx:if="{{quantity && usdPrice}}">
+        <view class="total-price-display">
+          <text class="total-label">总价：</text>
+          <text class="total-value">${{totalPrice}}</text>
+        </view>
+        
+        <view class="rmb-cost-display" wx:if="{{costPreview.show}}">
+          <view class="rmb-cost-main">
+            <text class="rmb-label">人民币成本</text>
+            <text class="rmb-value">¥{{costPreview.rmbCost}}</text>
+          </view>
+          <view class="cost-breakdown" wx:if="{{costPreview.exchangeRate}}">
+            <text class="breakdown-text">汇率: {{costPreview.exchangeRate}}</text>
+          </view>
+        </view>
+        
+        <view class="cost-warning" wx:if="{{costPreview.insufficient}}">
+          <text class="warning-icon">⚠️</text>
+          <text class="warning-text">余额不足，需要充值</text>
+        </view>
+      </view>
+    </view>
+
+
+
+
+  </view>
+
+  <!-- 底部固定操作区 -->
+  <view class="footer">
+    <view class="purchase-summary" wx:if="{{itemName && quantity && usdPrice}}">
+      <view class="summary-item">
+        <text class="summary-name">{{itemName}} × {{quantity}}</text>
+        <view class="summary-price">
+          <text class="usd-price">${{totalPrice}}</text>
+          <text class="rmb-price" wx:if="{{costPreview.rmbCost}}">≈ ¥{{costPreview.rmbCost}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <view class="submit-container">
+      <button class="submit-button" bindtap="submitPurchase" disabled="{{!canSubmit}}">
+        <text class="submit-text">确认购买</text>
+        <text class="submit-icon">✓</text>
+      </button>
+    </view>
+  </view>
+</view>

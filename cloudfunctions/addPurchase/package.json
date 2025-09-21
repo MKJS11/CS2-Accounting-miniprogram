@@ -1,0 +1,9 @@
+{
+  "name": "addPurchase",
+  "version": "1.0.0",
+  "description": "添加购买记录（含FIFO算法）",
+  "main": "index.js", 
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

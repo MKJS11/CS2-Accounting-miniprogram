@@ -1,0 +1,107 @@
+<!--user.wxml-->
+<view class="container">
+  <!-- 未登录状态 -->
+  <view wx:if="{{!hasUserInfo}}" class="login-container">
+    <view class="login-box">
+      <text class="app-logo">💰</text>
+      <text class="app-name">CS2记账助手</text>
+      <text class="app-desc">专业的CS2搬砖记账工具</text>
+      
+      <!-- 新版头像昵称填写（推荐，基础库2.21.2+） -->
+      <view wx:if="{{canIUseNicknameComp}}" class="form-login">
+        <view class="avatar-wrapper">
+          <button class="avatar-button" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+            <image wx:if="{{userInfo.avatarUrl}}" class="avatar-img" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+            <text wx:else class="avatar-placeholder">📷</text>
+          </button>
+          <text class="avatar-hint">点击上传头像</text>
+        </view>
+        
+        <view class="nickname-wrapper">
+          <input 
+            type="nickname"
+            class="nickname-input"
+            placeholder="请输入昵称"
+            placeholder-class="input-placeholder"
+            value="{{userInfo.nickName}}"
+            bindchange="onNicknameInput"
+          />
+        </view>
+        
+        <button class="login-btn confirm-btn" bindtap="confirmLogin">
+          <text class="btn-icon">✅</text>
+          <text>确认登录</text>
+        </button>
+      </view>
+      
+      <!-- 兼容旧版getUserProfile（基础库2.10.4+） -->
+      <view wx:else>
+        <button class="login-btn" bindtap="getUserProfile">
+          <text class="btn-icon">👤</text>
+          <text>微信快速登录</text>
+        </button>
+      </view>
+      
+      <view class="login-tips">
+        <text>登录后可使用全部功能</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 已登录状态 -->
+  <view wx:else class="user-container">
+    <!-- 用户信息卡片 -->
+    <view class="user-card">
+      <image class="user-avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+      <view class="user-info">
+        <text class="user-name">{{userInfo.nickName}}</text>
+        <text class="user-id">ID: {{openid}}</text>
+      </view>
+    </view>
+
+    <!-- 简化统计数据 -->
+    <view class="stats-card">
+      <view class="stats-item">
+        <text class="stats-value">{{stats.totalPurchases}}</text>
+        <text class="stats-label">总购买次数</text>
+      </view>
+    </view>
+
+    <!-- 功能列表 -->
+    <view class="menu-list">
+      <view class="menu-item" bindtap="exportData">
+        <text class="menu-icon">📥</text>
+        <text class="menu-text">导出数据</text>
+        <text class="menu-arrow">></text>
+      </view>
+      
+      <view class="menu-item" bindtap="clearData">
+        <text class="menu-icon">🗑️</text>
+        <text class="menu-text">清空数据</text>
+        <text class="menu-arrow">></text>
+      </view>
+      
+      <view class="menu-item" bindtap="checkUpdate">
+        <text class="menu-icon">🔄</text>
+        <text class="menu-text">检查更新</text>
+        <text class="menu-arrow">></text>
+      </view>
+      
+      <view class="menu-item" bindtap="aboutUs">
+        <text class="menu-icon">ℹ️</text>
+        <text class="menu-text">版本信息</text>
+        <text class="menu-arrow">></text>
+      </view>
+    </view>
+
+    <!-- 版本信息显示 -->
+    <view class="version-info">
+      <text class="version-text">{{versionInfo.appName}} v{{versionInfo.appVersion}}</text>
+    </view>
+
+    <!-- 退出登录 -->
+    <button class="logout-btn" bindtap="logout">
+      退出登录
+    </button>
+  </view>
+</view>

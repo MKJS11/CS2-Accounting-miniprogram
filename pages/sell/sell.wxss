@@ -1,0 +1,388 @@
+/* sell.wxss */
+.container {
+  padding: 30rpx;
+  background-color: #f8fafc;
+  min-height: 100vh;
+  box-sizing: border-box;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* 表单区域 */
+.form-section {
+  background: white;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  box-shadow: 0 5rpx 15rpx rgba(0,0,0,0.05);
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.form-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 40rpx;
+  text-align: center;
+}
+
+/* 表单项 */
+.form-item {
+  margin-bottom: 40rpx;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: #374151;
+  margin-bottom: 15rpx;
+  font-weight: 500;
+}
+
+/* 物品选择器 */
+.item-selector {
+  border: 2rpx solid #e5e7eb;
+  border-radius: 15rpx;
+  padding: 25rpx;
+  background-color: #f9fafb;
+  position: relative;
+}
+
+.selected-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15rpx;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5rpx;
+  flex: 1;
+  min-width: 0; /* 允许收缩 */
+}
+
+.item-name {
+  font-size: 32rpx;
+  color: #1f2937;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-price {
+  font-size: 24rpx;
+  color: #6b7280;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.3;
+}
+
+.placeholder {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #9ca3af;
+  font-size: 28rpx;
+}
+
+.selector-arrow {
+  font-size: 32rpx;
+  color: #9ca3af;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* 数量选择器 */
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20rpx;
+}
+
+.quantity-btn {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: #f3f4f6;
+  color: #374151;
+  border: 2rpx solid #e5e7eb;
+  font-size: 32rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantity-btn:active {
+  background: #e5e7eb;
+}
+
+.quantity-btn[disabled] {
+  background: #f9fafb;
+  color: #d1d5db;
+  border-color: #f3f4f6;
+}
+
+.quantity-input {
+  width: 120rpx;
+  height: 80rpx;
+  text-align: center;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 15rpx;
+  font-size: 32rpx;
+  background-color: #f9fafb;
+}
+
+.quantity-input:focus {
+  border-color: #f59e0b;
+  background-color: white;
+}
+
+.quantity-info {
+  margin-top: 15rpx;
+  text-align: center;
+}
+
+.available-quantity {
+  font-size: 24rpx;
+  color: #6b7280;
+}
+
+/* 输入框 */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.currency-prefix {
+  position: absolute;
+  left: 25rpx;
+  font-size: 32rpx;
+  color: #6b7280;
+  z-index: 1;
+}
+
+.form-input {
+  width: 100%;
+  height: 90rpx;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 15rpx;
+  padding: 0 25rpx 0 55rpx;
+  font-size: 32rpx;
+  background-color: #f9fafb;
+}
+
+.form-input:focus {
+  border-color: #f59e0b;
+  background-color: white;
+}
+
+
+
+/* 利润预览 */
+.profit-preview {
+  background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+  border-radius: 15rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.preview-title {
+  color: white;
+  font-size: 28rpx;
+  font-weight: 500;
+  margin-bottom: 20rpx;
+}
+
+.profit-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 15rpx;
+}
+
+.profit-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10rpx;
+  flex: 1;
+  min-width: 0; /* 允许收缩 */
+}
+
+.profit-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 24rpx;
+}
+
+.profit-value {
+  color: white;
+  font-size: 28rpx;
+  font-weight: 600;
+  text-align: center;
+  word-break: break-all; /* 长数字可以换行 */
+  max-width: 100%;
+}
+
+.profit-value.positive {
+  color: #10b981;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 6rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.profit-value.negative {
+  color: #ef4444;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 6rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+/* 提交按钮 */
+.submit-btn {
+  width: 100%;
+  height: 100rpx;
+  background: #d1d5db;
+  color: #9ca3af;
+  border: none;
+  border-radius: 15rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  margin-top: 40rpx;
+}
+
+.submit-btn.active {
+  background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+  color: white;
+  box-shadow: 0 10rpx 25rpx rgba(245, 158, 11, 0.3);
+}
+
+/* 弹窗样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.item-picker-modal {
+  width: 90%;
+  max-height: 80%;
+  background: white;
+  border-radius: 20rpx;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #e5e7eb;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.modal-close {
+  font-size: 40rpx;
+  color: #9ca3af;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.item-list {
+  max-height: 600rpx;
+  padding: 20rpx;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 80rpx 40rpx;
+  color: #9ca3af;
+}
+
+.empty-tip {
+  display: block;
+  margin-top: 20rpx;
+  font-size: 24rpx;
+}
+
+.item-card {
+  background: #f9fafb;
+  border-radius: 15rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  border: 2rpx solid transparent;
+}
+
+.item-card:active {
+  background: #f3f4f6;
+  border-color: #f59e0b;
+}
+
+.item-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15rpx;
+  gap: 15rpx;
+}
+
+.item-card .item-name {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #1f2937;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.item-type {
+  font-size: 24rpx;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.item-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15rpx;
+  margin-top: 10rpx;
+}
+
+.buy-price {
+  font-size: 26rpx;
+  color: #ef4444;
+  font-weight: 500;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.3;
+  flex: 1;
+  min-width: 0;
+}
+
+.buy-date {
+  font-size: 24rpx;
+  color: #9ca3af;
+}

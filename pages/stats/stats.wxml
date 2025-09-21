@@ -1,0 +1,164 @@
+<!--pages/stats/stats.wxml-->
+<view class="stats-container">
+  <!-- 总览卡片 -->
+  <view class="overview-section">
+    <view class="section-title">📊 总览</view>
+    
+    <!-- 总利润卡片（单独一行） -->
+    <view class="profit-row">
+      <view class="overview-card profit-card">
+        <view class="card-title">总利润 (完成交易)</view>
+        <view class="card-value {{statsData.totalProfitRmb >= 0 ? 'positive' : 'negative'}}">
+          ¥{{statsData.totalProfitRmb || '0.00'}}
+        </view>
+
+      </view>
+    </view>
+    
+    <!-- 投入和收入卡片（左右排列） -->
+    <view class="stats-row">
+      <view class="overview-card stats-card">
+        <view class="card-title">总投入</view>
+        <view class="card-value">¥{{statsData.totalInvestment || '0.00'}}</view>
+
+      </view>
+      
+      <view class="overview-card stats-card">
+        <view class="card-title">总收入</view>
+        <view class="card-value positive">¥{{statsData.totalIncome || '0.00'}}</view>
+
+      </view>
+    </view>
+    
+    <!-- 库存成本卡片（单独一行） -->
+    <view class="inventory-row">
+      <view class="overview-card inventory-card">
+        <view class="card-title">📦 库存成本</view>
+        <view class="card-value">¥{{statsData.inventoryCost || '0.00'}}</view>
+        <view class="card-subtitle">
+          <text class="inventory-count" wx:if="{{statsData.inventoryItemCount > 0}}">
+            ({{statsData.inventoryItemCount}}件在库)
+          </text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 利润率和完成交易统计 -->
+  <view class="profit-rate-section">
+    <view class="profit-rate-card">
+      <view class="card-title">💰 利润率 (完成交易)</view>
+      <view class="profit-rate-value {{statsData.profitRate >= 0 ? 'positive' : 'negative'}}">
+        {{statsData.profitRate || '0.00'}}%
+      </view>
+      <view class="profit-rate-desc">
+        <text wx:if="{{statsData.completedTransactionPairs > 0}}">
+          已完成{{statsData.completedTransactionPairs}}单交易
+        </text>
+        <text wx:else>暂无完成交易</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 分类统计 -->
+  <view class="category-section">
+    <view class="section-title">🏷️ 分类统计</view>
+    <view class="category-content" wx:if="{{statsData.categoryStats && statsData.categoryStats.length > 0}}">
+      <!-- CSS纯样式饼图 -->
+      <view class="css-pie-container">
+        <view class="css-pie-chart" style="background: {{pieChartGradient}};">
+          <!-- 中心圆 -->
+          <view class="pie-center">
+            <view class="pie-center-text">
+              <text class="pie-total-label">总利润</text>
+              <text class="pie-total-value {{statsData.totalProfitRmb >= 0 ? 'positive' : 'negative'}}">
+                ¥{{statsData.totalProfitRmb}}
+              </text>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 图例 -->
+      <view class="pie-legend">
+        <view class="legend-item" 
+              wx:for="{{statsData.categoryStats}}" 
+              wx:key="item_type"
+              style="--animation-delay: {{index}};">
+          <view class="legend-color" style="background-color: {{item.color}}"></view>
+          <view class="legend-info">
+            <view class="legend-label">
+              <text class="legend-icon">{{item.icon}}</text>
+              <text class="legend-name">{{item.name}}</text>
+            </view>
+            <view class="legend-value">
+              <text class="legend-profit {{item.profit >= 0 ? 'positive' : 'negative'}}">¥{{item.profit}}</text>
+              <text class="legend-percentage">({{item.percentage}}%)</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="empty-state" wx:else>
+      <text>暂无分类数据</text>
+    </view>
+  </view>
+
+  <!-- 月度趋势 -->
+  <view class="trend-section">
+    <view class="trend-header">
+      <view class="section-title">📈 月度趋势</view>
+      <view class="time-filter">
+        <view class="filter-btn {{trendTimeRange === '6' ? 'active' : ''}}" 
+              bindtap="onTrendTimeRangeChange" data-range="6">
+          最近6个月
+        </view>
+      </view>
+    </view>
+    
+    <view class="chart-container">
+      <view class="chart-placeholder" wx:if="{{!statsData.monthlyTrend || statsData.monthlyTrend.length === 0}}">
+        <text>暂无趋势数据</text>
+      </view>
+      <view class="chart-content" wx:else>
+        <!-- 数值刻度线 -->
+        <view class="chart-y-axis">
+          <view class="y-axis-line" wx:for="{{chartConfig.yAxisLabels}}" wx:key="*this">
+            <text class="y-axis-label">{{item}}</text>
+          </view>
+        </view>
+        
+        <!-- 柱状图区域 -->
+        <view class="chart-bars" data-range="{{trendTimeRange}}">
+          <view class="chart-bar-item" wx:for="{{statsData.monthlyTrend}}" wx:key="month">
+            <!-- 数值标签（在柱子上方） -->
+            <view class="bar-value-top" wx:if="{{item.profit !== 0 && item.profit > 0}}">¥{{item.profit}}</view>
+            
+            <!-- 柱子 -->
+            <view class="chart-bar-container">
+              <view class="chart-bar {{item.profit >= 0 ? 'positive' : 'negative'}}" 
+                    style="height: {{item.barHeight}}%; min-height: {{item.profit === 0 ? '4rpx' : '8rpx'}};">
+              </view>
+            </view>
+            
+            <!-- 负值数据标签（在柱子下方） -->
+            <view class="bar-value-bottom" wx:if="{{item.profit !== 0 && item.profit < 0}}">¥{{item.profit}}</view>
+            
+            <!-- 月份标签 -->
+            <view class="chart-bar-label">{{item.monthName}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+
+</view>
+
+<!-- 加载状态 -->
+<view class="loading-overlay" wx:if="{{isLoading}}">
+  <view class="loading-content">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载统计数据中...</text>
+  </view>
+</view>

@@ -1,0 +1,539 @@
+/**index.wxss**/
+page {
+  background: #f8fafc;
+  height: auto; /* 允许页面高度自适应内容 */
+  overflow-y: auto; /* 确保可以垂直滚动 */
+}
+
+/* 大屏幕优化 */
+@media screen and (min-width: 414px) {
+  .container {
+    padding: 20rpx;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .balance-card {
+    padding: 35rpx 25rpx;
+  }
+  
+  .quick-actions {
+    gap: 14rpx;
+  }
+  
+  .action-btn {
+    width: 120rpx;
+    height: 75rpx;
+    font-size: 22rpx;
+  }
+  
+  .btn-icon {
+    font-size: 22rpx;
+  }
+}
+
+.container {
+  padding: 20rpx;
+  padding-bottom: 180rpx; /* 为悬浮导航栏预留空间 */
+  max-width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100vh; /* 允许内容超过屏幕高度 */
+  display: block;
+}
+
+/* 登录提示 */
+.login-tip {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tip-box {
+  text-align: center;
+  padding: 60rpx;
+}
+
+.tip-icon {
+  font-size: 80rpx;
+  display: block;
+  margin-bottom: 30rpx;
+}
+
+.tip-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+.tip-desc {
+  font-size: 28rpx;
+  color: #999;
+  display: block;
+  margin-bottom: 50rpx;
+}
+
+.login-tip .login-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 50rpx;
+  padding: 25rpx 80rpx;
+  font-size: 32rpx;
+  display: inline-block;
+}
+
+/* 余额卡片 */
+.balance-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 24rpx;
+  padding: 50rpx 40rpx;
+  color: white;
+  box-shadow: 0 12rpx 40rpx rgba(0,0,0,0.15);
+  margin-bottom: 40rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+.balance-title {
+  font-size: 28rpx;
+  opacity: 0.9;
+  margin-bottom: 20rpx;
+}
+
+.balance-main {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 25rpx;
+}
+
+.currency-symbol {
+  font-size: 42rpx;
+  margin-right: 12rpx;
+  opacity: 0.9;
+}
+
+.balance-amount {
+  font-size: 84rpx;
+  font-weight: 600;
+  letter-spacing: -2rpx;
+}
+
+.balance-sub {
+  font-size: 28rpx;
+  opacity: 0.9;
+  margin-bottom: 10rpx;
+}
+
+.balance-rate {
+  font-size: 24rpx;
+  opacity: 0.8;
+}
+
+/* 快速操作 */
+.quick-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 24rpx;
+  margin-bottom: 40rpx;
+  padding: 0;
+}
+
+.action-btn {
+  flex: 1;
+  height: 80rpx;
+  border-radius: 16rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 22rpx;
+  font-weight: 500;
+  border: none;
+  box-shadow: 0 6rpx 20rpx rgba(0,0,0,0.12);
+  transition: all 0.3s ease;
+}
+
+.recharge-btn {
+  background: #10b981;
+  color: white;
+}
+
+.purchase-btn {
+  background: #ef4444;
+  color: white;
+}
+
+
+.btn-icon {
+  font-size: 20rpx;
+  margin-bottom: 2rpx;
+  font-weight: bold;
+}
+
+/* 最近交易 */
+.recent-section {
+  background: white;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.06);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.view-all {
+  font-size: 28rpx;
+  color: #667eea;
+  font-weight: 500;
+}
+
+.transaction-list {
+  margin-top: 20rpx;
+}
+
+.transaction-item {
+  border-bottom: 1rpx solid #f3f4f6;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.transaction-item:last-child {
+  border-bottom: none;
+}
+
+.transaction-item:hover {
+  background: #f9fafb;
+}
+
+/* 基础信息行 */
+.trans-basic {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 0;
+  min-height: 80rpx; /* 统一基础高度 */
+}
+
+.trans-left {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  flex: 1;
+  height: 80rpx; /* 固定高度 */
+}
+
+.trans-brief {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 80rpx; /* 与左侧容器高度一致 */
+}
+
+.brief-text {
+  font-size: 28rpx;
+  color: #374151;
+  font-weight: 500;
+  line-height: 1.2;
+  height:80rpx;
+  display: flex;
+  align-items: flex-start;
+  padding-top: -10rpx; /* 向上调整文本位置 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trans-type {
+  padding: 0 24rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  min-width: 90rpx;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 56rpx; /* 增加标签高度 */
+  line-height: 1;
+}
+
+.trans-type.recharge {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.trans-type.purchase {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.trans-type.sell {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* 物品信息样式 */
+.item-info {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+
+.item-name {
+  font-size: 28rpx;
+  color: #374151;
+}
+
+.item-type-tag-small {
+  display: inline-flex;
+  align-items: center;
+  padding: 2rpx 8rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12rpx;
+}
+
+.type-icon-small {
+  font-size: 16rpx;
+  margin-right: 4rpx;
+}
+
+.type-text-small {
+  font-size: 16rpx;
+  color: white;
+  font-weight: 500;
+}
+
+.trans-info {
+  font-size: 26rpx;
+  color: #4b5563;
+  font-weight: 400;
+  word-break: break-all;
+  overflow: hidden;
+}
+
+.trans-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 120rpx;
+  flex-shrink: 0;
+  height: 80rpx; /* 与左侧保持一致的固定高度 */
+  gap: 2rpx;
+}
+
+/* 展开图标 */
+.expand-icon {
+  font-size: 20rpx;
+  color: #9ca3af;
+  transition: transform 0.3s ease;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20rpx; /* 调整图标高度 */
+}
+
+.expand-icon.rotated {
+  transform: rotate(180deg);
+}
+
+.trans-amount {
+  font-size: 34rpx;
+  font-weight: 600;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  height: 48rpx; /* 调整金额文本高度以适配80rpx容器 */
+  justify-content: flex-end;
+}
+
+.trans-amount.recharge {
+  color: #10b981;
+}
+
+.trans-amount.purchase {
+  color: #ef4444;
+}
+
+.trans-amount.sell {
+  color: #f59e0b;
+}
+
+/* 详细信息区域 */
+.trans-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  background: #f9fafb;
+  margin: 0 -40rpx;
+  padding: 0 40rpx;
+}
+
+.trans-detail.show {
+  max-height: 500rpx;
+  padding: 20rpx 40rpx;
+}
+
+.detail-content {
+  border-top: 1rpx solid #e5e7eb;
+  padding-top: 20rpx;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+  font-size: 26rpx;
+  line-height: 1.4; /* 统一行高 */
+  min-height: 36rpx; /* 确保最小高度 */
+}
+
+.detail-row:last-child {
+  margin-bottom: 0;
+}
+
+.detail-label {
+  color: #6b7280;
+  font-weight: 500;
+  min-width: 140rpx;
+  flex-shrink: 0; /* 防止标签被压缩 */
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  line-height: 1.4;
+}
+
+.detail-value {
+  color: #374151;
+  font-weight: 400;
+  text-align: right;
+  flex: 1;
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  justify-content: flex-end; /* 右对齐 */
+  line-height: 1.4;
+  margin-left: 16rpx; /* 与标签保持间距 */
+}
+
+.detail-value.time {
+  color: #9ca3af;
+  font-size: 24rpx;
+}
+
+/* 详情中的物品类型标签 */
+.item-type-tag-detail {
+  display: inline-flex;
+  align-items: center;
+  padding: 4rpx 12rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16rpx;
+  line-height: 1.2; /* 统一行高 */
+  height: 28rpx; /* 固定高度确保对齐 */
+}
+
+.type-icon-detail {
+  font-size: 20rpx;
+  margin-right: 6rpx;
+}
+
+.type-text-detail {
+  font-size: 20rpx;
+  color: white;
+  font-weight: 500;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 80rpx 0;
+  color: #9ca3af;
+  font-size: 30rpx;
+}
+
+/* 骨架屏样式 */
+.balance-skeleton {
+  animation: skeleton-loading 1.5s ease-in-out infinite alternate;
+}
+
+.skeleton-text {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8rpx;
+  animation: skeleton-loading 1.5s ease-in-out infinite alternate;
+}
+
+.skeleton-text.large {
+  height: 84rpx;
+  width: 300rpx;
+}
+
+.skeleton-text.medium {
+  height: 28rpx;
+  width: 200rpx;
+}
+
+.skeleton-text.small {
+  height: 24rpx;
+  width: 150rpx;
+}
+
+.skeleton-text.tiny {
+  height: 26rpx;
+  width: 80rpx;
+}
+
+.transaction-skeleton {
+  margin-top: 20rpx;
+}
+
+.transaction-item-skeleton {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f3f4f6;
+}
+
+.transaction-item-skeleton:last-child {
+  border-bottom: none;
+}
+
+.transaction-item-skeleton .trans-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  flex: 1;
+}
+
+.transaction-item-skeleton .trans-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8rpx;
+  min-width: 100rpx;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}

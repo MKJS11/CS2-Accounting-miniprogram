@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "CS2记账",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark",
+  "usingComponents": {
+  }
+}

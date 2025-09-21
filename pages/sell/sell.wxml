@@ -1,0 +1,123 @@
+<!--sell.wxml-->
+<view class="container">
+  <view class="form-section">
+    <view class="form-title">卖出物品</view>
+    
+    <!-- 选择物品 -->
+    <view class="form-item">
+      <view class="form-label">选择物品</view>
+      <view class="item-selector" bindtap="showItemPicker">
+        <view wx:if="{{selectedItem}}" class="selected-item">
+          <view class="item-info">
+            <text class="item-name">{{selectedItem.item_name}}</text>
+            <text class="item-price">{{selectedItem.buyPriceText}}</text>
+          </view>
+          <text class="selector-arrow">></text>
+        </view>
+        <view wx:else class="placeholder">
+          <text>请选择要卖出的物品</text>
+          <text class="selector-arrow">></text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 卖出数量 -->
+    <view class="form-item">
+      <view class="form-label">卖出数量</view>
+      <view class="quantity-selector">
+        <button class="quantity-btn" bindtap="decreaseQuantity" disabled="{{sellQuantity <= 1}}">-</button>
+        <input 
+          type="number"
+          class="quantity-input"
+          value="{{sellQuantity}}"
+          bindinput="onQuantityInput"
+          min="1"
+          max="{{selectedItem ? selectedItem.quantity : 1}}"
+        />
+        <button class="quantity-btn" bindtap="increaseQuantity" disabled="{{sellQuantity >= (selectedItem ? selectedItem.quantity : 1)}}">+</button>
+      </view>
+      <view wx:if="{{selectedItem}}" class="quantity-info">
+        <text class="available-quantity">可卖数量: {{selectedItem.quantity}}</text>
+      </view>
+    </view>
+
+    <!-- 卖出价格 -->
+    <view class="form-item">
+      <view class="form-label">单价</view>
+      <view class="input-wrapper">
+        <text class="currency-prefix">¥</text>
+        <input 
+          type="digit"
+          class="form-input"
+          placeholder="请输入人民币单价"
+          value="{{sellPrice}}"
+          bindinput="onSellPriceInput"
+        />
+      </view>
+    </view>
+
+    <!-- 利润预览 -->
+    <view wx:if="{{profitPreview.show}}" class="profit-preview">
+      <view class="preview-title">交易预览</view>
+      <view class="profit-info">
+        <view class="profit-item">
+          <text class="profit-label">总价:</text>
+          <text class="profit-value">¥{{profitPreview.totalPrice}}</text>
+        </view>
+        <view class="profit-item">
+          <text class="profit-label">总利润:</text>
+          <text class="profit-value {{profitPreview.totalProfit >= 0 ? 'positive' : 'negative'}}">
+            {{profitPreview.totalProfit >= 0 ? '+' : ''}}¥{{profitPreview.totalProfit}}
+          </text>
+        </view>
+        <view class="profit-item">
+          <text class="profit-label">利润率:</text>
+          <text class="profit-value {{profitPreview.profitRate >= 0 ? 'positive' : 'negative'}}">
+            {{profitPreview.profitRate >= 0 ? '+' : ''}}{{profitPreview.profitRate}}%
+          </text>
+        </view>
+      </view>
+    </view>
+
+
+
+    <!-- 提交按钮 -->
+    <button 
+      class="submit-btn {{canSubmit ? 'active' : ''}}"
+      bindtap="submitSell"
+      disabled="{{!canSubmit}}"
+    >
+      确认卖出
+    </button>
+  </view>
+</view>
+
+<!-- 物品选择弹窗 -->
+<view wx:if="{{showItemPicker}}" class="modal-overlay" bindtap="hideItemPicker">
+  <view class="item-picker-modal" catchtap="">
+    <view class="modal-header">
+      <text class="modal-title">选择要卖出的物品</text>
+      <text class="modal-close" bindtap="hideItemPicker">×</text>
+    </view>
+    
+    <scroll-view class="item-list" scroll-y>
+      <view wx:if="{{availableItems.length === 0}}" class="empty-state">
+        <text>暂无可卖出的物品</text>
+        <text class="empty-tip">请先购买一些物品</text>
+      </view>
+      
+      <block wx:for="{{availableItems}}" wx:key="_id">
+        <view class="item-card" bindtap="selectItem" data-index="{{index}}">
+          <view class="item-main">
+            <text class="item-name">{{item.item_name}}</text>
+            <text class="item-type">{{item.item_type === 'weapon' ? '武器' : '箱子'}}</text>
+          </view>
+          <view class="item-details">
+            <text class="buy-price">{{item.buyPriceText}}</text>
+            <text class="buy-date">{{item.timeStr}}</text>
+          </view>
+        </view>
+      </block>
+    </scroll-view>
+  </view>
+</view>

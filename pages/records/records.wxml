@@ -1,0 +1,315 @@
+<!--records.wxml-->
+<view class="page">
+  <!-- 需要登录提示 -->
+  <view wx:if="{{needLogin}}" class="login-container">
+    <view class="login-card">
+      <text class="login-icon">🔐</text>
+      <text class="login-title">登录后查看记录</text>
+      <text class="login-desc">管理您的充值和购买记录</text>
+      <navigator url="/pages/user/user" open-type="switchTab" class="login-button">
+        前往登录
+      </navigator>
+    </view>
+  </view>
+
+  <!-- 主内容区域 -->
+  <view wx:else class="main-container">
+    <!-- 顶部标签栏 -->
+    <view class="tab-bar">
+      <view class="tab-item {{activeTab === 'all' ? 'active' : ''}}" 
+            bindtap="switchTab" data-tab="all">
+        <text class="tab-text">全部</text>
+        <view wx:if="{{activeTab === 'all'}}" class="tab-indicator"></view>
+      </view>
+      <view class="tab-item {{activeTab === 'recharge' ? 'active' : ''}}" 
+            bindtap="switchTab" data-tab="recharge">
+        <text class="tab-text">充值</text>
+        <view wx:if="{{activeTab === 'recharge'}}" class="tab-indicator"></view>
+      </view>
+      <view class="tab-item {{activeTab === 'purchase' ? 'active' : ''}}" 
+            bindtap="switchTab" data-tab="purchase">
+        <text class="tab-text">购买</text>
+        <view wx:if="{{activeTab === 'purchase'}}" class="tab-indicator"></view>
+      </view>
+      <view class="tab-item {{activeTab === 'sell' ? 'active' : ''}}" 
+            bindtap="switchTab" data-tab="sell">
+        <text class="tab-text">卖出</text>
+        <view wx:if="{{activeTab === 'sell'}}" class="tab-indicator"></view>
+      </view>
+    </view>
+
+    <!-- 内容区域 -->
+    <scroll-view class="content-area" 
+                 scroll-y 
+                 bindscrolltolower="loadMore"
+                 refresher-enabled="{{true}}"
+                 refresher-triggered="{{refreshing}}"
+                 bindrefresherrefresh="onRefresh">
+      
+      <!-- 记录列表 -->
+      <view class="records-container" wx:if="{{records.length > 0}}">
+        <view wx:for="{{records}}" wx:for-index="recordIndex" wx:key="_id" class="record-wrapper">
+          
+          <!-- 充值记录 -->
+          <view wx:if="{{item.type === 'recharge'}}" class="record-card">
+            <view class="record-badge recharge-badge"></view>
+            <view class="record-content">
+              <view class="record-header">
+                <view class="record-left">
+                  <view class="record-title-area">
+                    <text class="record-icon">💰</text>
+                    <view class="record-info">
+                      <text class="record-title">账户充值</text>
+                      <text class="record-time">{{item.timeStr}}</text>
+                    </view>
+                  </view>
+                  <view class="record-details-inline">
+                    <text class="detail-item">汇率 1:{{item.exchange_rate}}</text>
+                    <text class="detail-separator">•</text>
+                    <view class="detail-item-with-toggle">
+                      <text class="detail-item primary">剩余 ${{item.remaining_usd}}</text>
+                      <view class="detail-toggle" bindtap="toggleRechargeDetails" data-index="{{recordIndex}}">
+                        <text class="toggle-icon">{{item.detailsExpanded ? '▲' : '▼'}}</text>
+                      </view>
+                    </view>
+                  </view>
+                </view>
+                <view class="record-right">
+                  <view class="record-amount-area">
+                    <text class="amount-usd positive">+${{item.usd_amount}}</text>
+                    <text class="amount-rmb">¥{{item.rmb_amount}}</text>
+                  </view>
+                  <view class="record-actions-compact">
+                    <view class="action-icon edit" bindtap="editRecord" data-item="{{item}}">
+                      <text class="icon">✏️</text>
+                    </view>
+                    <view class="action-icon delete" bindtap="deleteRecord" 
+                          data-id="{{item._id}}" data-type="recharge">
+                      <text class="icon">🗑️</text>
+                    </view>
+                  </view>
+                </view>
+              </view>
+              
+              <view class="record-details {{item.detailsExpanded ? 'expanded' : 'collapsed'}}" wx:if="{{item.detailsExpanded}}">
+                <text class="detail-section-title">充值详情</text>
+                <view class="cost-details">
+                  <view class="detail-row">
+                    <text class="detail-label">人民币金额</text>
+                    <text class="detail-value">¥{{item.rmb_amount}}</text>
+                  </view>
+                  <view class="detail-row">
+                    <text class="detail-label">美元金额</text>
+                    <text class="detail-value">${{item.usd_amount}}</text>
+                  </view>
+                  <view class="detail-row">
+                    <text class="detail-label">汇率</text>
+                    <text class="detail-value">1:{{item.exchange_rate}}</text>
+                  </view>
+                  <view class="detail-row">
+                    <text class="detail-label">剩余美元</text>
+                    <text class="detail-value">${{item.remaining_usd}}</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <!-- 购买记录 -->
+          <view wx:elif="{{item.type === 'purchase'}}" class="record-card">
+            <view class="record-badge purchase-badge"></view>
+            <view class="record-content">
+              <view class="record-header">
+                <view class="record-left">
+                  <view class="record-title-area">
+                    <text class="record-icon">🛍️</text>
+                    <view class="record-info">
+                      <view class="record-title-row">
+                        <text class="record-title">{{item.item_name}}</text>
+                        <view wx:if="{{item.item_type}}" class="item-type-tag">
+                          <text class="type-icon">{{item.item_type_icon}}</text>
+                          <text class="type-text">{{item.item_type_label}}</text>
+                        </view>
+                      </view>
+                      <text class="record-time">{{item.timeStr}}</text>
+                    </view>
+                  </view>
+                  <view class="record-details-inline" wx:if="{{item.recharge_details && item.recharge_details.length > 0}}">
+                    <text class="detail-item">成本明细</text>
+                    <text class="detail-separator">•</text>
+                    <view class="detail-item-with-toggle">
+                      <text class="detail-item primary">{{item.recharge_details.length}}笔汇率</text>
+                      <view class="detail-toggle" bindtap="togglePurchaseDetails" data-index="{{recordIndex}}">
+                        <text class="toggle-icon">{{item.detailsExpanded ? '▲' : '▼'}}</text>
+                      </view>
+                    </view>
+                  </view>
+                </view>
+                <view class="record-right">
+                  <view class="record-amount-area">
+                    <text class="amount-usd negative">-${{item.usd_price}}</text>
+                    <text class="amount-rmb">¥{{item.rmb_cost}}</text>
+                  </view>
+                  <view class="record-actions-compact">
+                    <view class="action-icon edit" bindtap="editRecord" data-item="{{item}}">
+                      <text class="icon">✏️</text>
+                    </view>
+                    <view class="action-icon delete" bindtap="deleteRecord" 
+                          data-id="{{item._id}}" data-type="purchase">
+                      <text class="icon">🗑️</text>
+                    </view>
+                  </view>
+                </view>
+              </view>
+              
+              <view class="record-details {{item.detailsExpanded ? 'expanded' : 'collapsed'}}" wx:if="{{item.recharge_details && item.recharge_details.length > 0 && item.detailsExpanded}}">
+                <text class="detail-section-title">成本明细</text>
+                <view class="cost-details">
+                  <view wx:for="{{item.recharge_details}}" wx:for-item="detail" wx:key="index" 
+                        class="cost-item">
+                    <text class="cost-text">${{detail.used_usd}} × {{detail.exchange_rate}} = ¥{{detail.rmb_cost}}</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <!-- 卖出记录 -->
+          <view wx:elif="{{item.type === 'sell'}}" class="record-card">
+            <view class="record-badge sell-badge"></view>
+            <view class="record-content">
+              <view class="record-header">
+                <view class="record-left">
+                  <view class="record-title-area">
+                    <text class="record-icon">💸</text>
+                    <view class="record-info">
+                      <view class="record-title-row">
+                        <text class="record-title">{{item.item_name}}</text>
+                        <view wx:if="{{item.item_type}}" class="item-type-tag">
+                          <text class="type-icon">{{item.item_type_icon}}</text>
+                          <text class="type-text">{{item.item_type_label}}</text>
+                        </view>
+                      </view>
+                      <text class="record-time">{{item.timeStr}}</text>
+                    </view>
+                  </view>
+                  <view class="record-details-inline">
+                    <text class="detail-item profit-label">利润</text>
+                    <text class="detail-separator"></text>
+                    <view class="detail-item-with-toggle">
+                      <text class="detail-item primary {{item.profit >= 0 ? 'positive' : 'negative'}}">
+                        {{item.profit >= 0 ? '+' : ''}}¥{{item.profit}}
+                      </text>
+                      <view class="detail-toggle" bindtap="toggleSellDetails" data-index="{{recordIndex}}">
+                        <text class="toggle-icon">{{item.detailsExpanded ? '▲' : '▼'}}</text>
+                      </view>
+                    </view>
+                  </view>
+                </view>
+                <view class="record-right">
+                  <view class="record-amount-area">
+                    <text class="amount-usd positive">+¥{{item.total_sell_price_cny || item.unit_sell_price_cny}}</text>
+                    <text class="amount-rmb">卖出收入</text>
+                  </view>
+                  <view class="record-actions-compact">
+                    <view class="action-icon edit" bindtap="editRecord" data-item="{{item}}">
+                      <text class="icon">✏️</text>
+                    </view>
+                    <view class="action-icon delete" bindtap="deleteRecord" 
+                          data-id="{{item._id}}" data-type="sell">
+                      <text class="icon">🗑️</text>
+                    </view>
+                  </view>
+                </view>
+              </view>
+              
+              <view class="record-details {{item.detailsExpanded ? 'expanded' : 'collapsed'}}" wx:if="{{item.detailsExpanded}}">
+                <text class="detail-section-title">交易详情</text>
+                <view class="cost-details">
+                  <view class="detail-row">
+                    <text class="detail-label">购买成本</text>
+                    <text class="detail-value">${{item.total_purchase_price}} (¥{{item.total_purchase_price_cny}})</text>
+                  </view>
+                  <view class="detail-row">
+                    <text class="detail-label">卖出价格</text>
+                    <text class="detail-value">¥{{item.total_sell_price_cny}}</text>
+                  </view>
+                  <view class="detail-row" wx:if="{{item.platform}}">
+                    <text class="detail-label">交易平台</text>
+                    <text class="detail-value">{{item.platform}}</text>
+                  </view>
+                  <view class="detail-row" wx:if="{{item.condition}}">
+                    <text class="detail-label">物品品质</text>
+                    <text class="detail-value">{{item.condition}}</text>
+                  </view>
+                  <view class="detail-row" wx:if="{{item.notes}}">
+                    <text class="detail-label">备注</text>
+                    <text class="detail-value">{{item.notes}}</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 加载更多提示 -->
+        <view class="list-footer">
+          <view wx:if="{{loading}}" class="loading-more">
+            <text>加载中...</text>
+          </view>
+          <view wx:elif="{{!hasMore}}" class="no-more">
+            <text>已经到底了</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 空状态 -->
+      <view wx:if="{{!loading && records.length === 0}}" class="empty-container">
+        <text class="empty-icon">📋</text>
+        <text class="empty-title">暂无记录</text>
+        <text class="empty-desc">{{activeTab === 'recharge' ? '还没有充值记录' : activeTab === 'purchase' ? '还没有购买记录' : activeTab === 'sell' ? '还没有卖出记录' : '还没有任何记录'}}</text>
+      </view>
+
+      <!-- 初始加载 -->
+      <view wx:if="{{loading && records.length === 0}}" class="initial-loading">
+        <text class="loading-spinner">⏳</text>
+        <text class="loading-text">正在加载...</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+
+<!-- 编辑弹窗 -->
+<view wx:if="{{showEditModal}}" class="modal-overlay" bindtap="closeEditModal">
+  <view class="modal-content" catchtap="stopPropagation">
+    <view class="modal-header">
+      <text class="modal-title">编辑记录</text>
+      <view class="modal-close" bindtap="closeEditModal">
+        <text>✕</text>
+      </view>
+    </view>
+    
+    <view class="modal-body">
+      <view class="input-group" wx:if="{{editingItem.type === 'purchase'}}">
+        <text class="input-label">物品名称</text>
+        <input class="input-field" 
+               value="{{editingItem.item_name}}" 
+               bindinput="onEditItemName"
+               placeholder="请输入物品名称" />
+      </view>
+      
+      <view class="input-group">
+        <text class="input-label">备注信息</text>
+        <input class="input-field" 
+               value="{{editingItem.remark || ''}}" 
+               bindinput="onEditRemark"
+               placeholder="请输入备注" />
+      </view>
+    </view>
+    
+    <view class="modal-actions">
+      <button class="modal-button cancel" bindtap="closeEditModal">取消</button>
+      <button class="modal-button confirm" bindtap="confirmEdit">确定</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,743 @@
+/* 现代化购买界面样式 */
+
+/* 全局页面设置 */
+page {
+  background: #fef8f0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  color: #333;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 顶部标题区域 */
+.header {
+  position: relative;
+  padding: 60rpx 40rpx 40rpx;
+  background: linear-gradient(135deg, #ff7b39 0%, #ff9854 100%);
+  color: white;
+  overflow: hidden;
+}
+
+.header-decoration {
+  position: absolute;
+  top: -50rpx;
+  right: -50rpx;
+  width: 200rpx;
+  height: 200rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20rpx) rotate(180deg); }
+}
+
+.header-content {
+  position: relative;
+  z-index: 1;
+}
+
+.header-title {
+  display: block;
+  font-size: 48rpx;
+  font-weight: 700;
+  margin-bottom: 10rpx;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.header-subtitle {
+  display: block;
+  font-size: 28rpx;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+/* 主内容区域 */
+.main-content {
+  flex: 1;
+  padding: 0 30rpx 30rpx;
+  margin-top: -20rpx;
+}
+
+/* 卡片基础样式 */
+.card {
+  background: white;
+  border-radius: 24rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4rpx);
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  padding: 32rpx 32rpx 20rpx;
+  border-bottom: 2rpx solid #f8f9fa;
+  position: relative;
+}
+
+.card-icon {
+  font-size: 40rpx;
+  margin-right: 20rpx;
+  filter: drop-shadow(0 2rpx 4rpx rgba(0, 0, 0, 0.1));
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #2d3748;
+  flex: 1;
+}
+
+.optional-tag {
+  background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
+  color: white;
+  font-size: 20rpx;
+  padding: 6rpx 12rpx;
+  border-radius: 12rpx;
+  font-weight: 500;
+}
+
+/* 输入组样式 */
+.input-group {
+  padding: 24rpx 32rpx;
+}
+
+.input-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.label-text {
+  font-size: 28rpx;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.label-icon {
+  font-size: 24rpx;
+  opacity: 0.6;
+}
+
+/* 现代化输入框 */
+.input-container {
+  position: relative;
+}
+
+.modern-input {
+  width: 100%;
+  height: 88rpx;
+  padding: 0 24rpx;
+  background: #f7fafc;
+  border: 2rpx solid #e2e8f0;
+  border-radius: 16rpx;
+  font-size: 30rpx;
+  color: #2d3748;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.modern-input:focus {
+  background: white;
+  border-color: #ff7b39;
+  box-shadow: 0 0 0 6rpx rgba(255, 123, 57, 0.1);
+}
+
+/* 选择器样式 */
+.modern-picker {
+  width: 100%;
+}
+
+.picker-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 88rpx;
+  padding: 0 24rpx;
+  background: #f7fafc;
+  border: 2rpx solid #e2e8f0;
+  border-radius: 16rpx;
+  transition: all 0.3s ease;
+}
+
+.picker-container:active {
+  background: white;
+  border-color: #ff7b39;
+  box-shadow: 0 0 0 6rpx rgba(255, 123, 57, 0.1);
+}
+
+.picker-content {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.picker-icon {
+  font-size: 32rpx;
+  margin-right: 16rpx;
+}
+
+.picker-text {
+  font-size: 30rpx;
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.picker-arrow {
+  font-size: 32rpx;
+  color: #a0aec0;
+  font-weight: bold;
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+}
+
+/* 数量输入容器 */
+.quantity-input-container {
+  display: flex;
+  align-items: center;
+  background: #f7fafc;
+  border: 2rpx solid #e2e8f0;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  height: 84rpx; /* 与价格输入框保持一致的高度 */
+  transition: all 0.3s ease;
+}
+
+.quantity-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 32rpx;
+  color: #2d3748;
+  font-weight: 600;
+  height: 84rpx; /* 与容器高度一致 */
+  line-height: 84rpx; /* 垂直居中 */
+}
+
+.unit-text {
+  font-size: 28rpx;
+  color: #718096;
+  margin-left: 16rpx;
+  font-weight: 500;
+}
+
+.quantity-input-container:focus-within {
+  background: white;
+  border-color: #ff7b39;
+  box-shadow: 0 0 0 6rpx rgba(255, 123, 57, 0.1);
+}
+
+/* 价格输入特殊样式 */
+.price-input-container {
+  display: flex;
+  align-items: center;
+  background: #f7fafc;
+  border: 2rpx solid #e2e8f0;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  height: 84rpx; /* 明确设置高度 */
+  transition: all 0.3s ease;
+}
+
+.price-input-container:focus-within {
+  background: white;
+  border-color: #ff7b39;
+  box-shadow: 0 0 0 6rpx rgba(255, 123, 57, 0.1);
+}
+
+.currency-symbol {
+  font-size: 32rpx; /* 调整与数量输入框字体大小一致 */
+  color: #48bb78;
+  font-weight: 700;
+  margin-right: 12rpx;
+  line-height: 84rpx; /* 垂直居中 */
+}
+
+.price-input {
+  flex: 1;
+  height: 84rpx;
+  border: none;
+  background: transparent;
+  font-size: 32rpx;
+  color: #2d3748;
+  font-weight: 600;
+  line-height: 84rpx; /* 垂直居中 */
+}
+
+/* 价格输入行 - 左右排列 */
+.price-input-row {
+  display: flex;
+  gap: 48rpx;
+  margin-bottom: 32rpx;
+  align-items: flex-start; /* 确保标签对齐 */
+  justify-content: center; /* 居中对齐输入框 */
+}
+
+.price-input-item {
+  flex: 0 0 280rpx; /* 固定宽度，不伸缩 */
+  min-width: 0; /* 防止内容溢出 */
+}
+
+/* 确保输入框标签对齐 */
+.price-input-item .input-label {
+  height: 48rpx; /* 统一标签高度 */
+  margin-bottom: 16rpx;
+}
+
+/* 成本预估卡片 */
+.cost-card {
+  border-left: 8rpx solid #48bb78;
+  background: linear-gradient(135deg, #f0fff4 0%, #e6fffa 100%);
+}
+
+.cost-summary {
+  padding: 24rpx 32rpx;
+}
+
+.cost-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.cost-label {
+  font-size: 28rpx;
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.cost-value {
+  font-size: 36rpx;
+  color: #48bb78;
+  font-weight: 700;
+}
+
+.cost-warning {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 20rpx;
+  background: #fed7d7;
+  border-radius: 12rpx;
+  border-left: 6rpx solid #f56565;
+}
+
+.warning-icon {
+  font-size: 28rpx;
+  margin-right: 12rpx;
+}
+
+.warning-text {
+  font-size: 26rpx;
+  color: #c53030;
+  font-weight: 500;
+}
+
+/* 使用明细 */
+.usage-details {
+  padding: 20rpx 32rpx 32rpx;
+  border-top: 2rpx solid #e6fffa;
+}
+
+.details-header {
+  font-size: 24rpx;
+  color: #718096;
+  margin-bottom: 16rpx;
+  font-weight: 500;
+}
+
+.detail-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.detail-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12rpx 16rpx;
+  background: white;
+  border-radius: 12rpx;
+  border: 2rpx solid #e6fffa;
+  min-width: 160rpx;
+}
+
+.detail-amount {
+  font-size: 28rpx;
+  color: #48bb78;
+  font-weight: 600;
+}
+
+.detail-rate {
+  font-size: 20rpx;
+  color: #718096;
+  margin-top: 4rpx;
+}
+
+/* 成本预览区域 */
+.cost-preview-section {
+  margin-top: 32rpx;
+  padding: 24rpx;
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  border-radius: 16rpx;
+  border: 2rpx solid #fed7aa;
+}
+
+.cost-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.cost-row:last-child {
+  margin-bottom: 0;
+}
+
+.cost-label {
+  font-size: 28rpx;
+  color: #92400e;
+  font-weight: 500;
+}
+
+.cost-value {
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.total-price {
+  color: #ff7b39;
+}
+
+.estimated-cost {
+  color: #dc2626;
+}
+
+/* 人民币成本显示区域 */
+.rmb-cost-section {
+  margin-top: 32rpx;
+  padding: 32rpx;
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  border-radius: 20rpx;
+  border: 2rpx solid #fed7aa;
+  box-shadow: 0 8rpx 25rpx rgba(255, 123, 57, 0.15);
+}
+
+.total-price-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 2rpx solid #fed7aa;
+}
+
+.total-label {
+  font-size: 28rpx;
+  color: #92400e;
+  font-weight: 500;
+  margin-right: 12rpx;
+}
+
+.total-value {
+  font-size: 36rpx;
+  color: #ff7b39;
+  font-weight: 700;
+}
+
+.rmb-cost-display {
+  text-align: center;
+}
+
+.rmb-cost-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.rmb-label {
+  font-size: 26rpx;
+  color: #92400e;
+  font-weight: 500;
+  margin-bottom: 8rpx;
+}
+
+.rmb-value {
+  font-size: 48rpx;
+  color: #48bb78;
+  font-weight: 700;
+  text-shadow: 0 2rpx 4rpx rgba(72, 187, 120, 0.2);
+}
+
+.cost-breakdown {
+  padding: 12rpx 20rpx;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12rpx;
+  margin-top: 16rpx;
+}
+
+.breakdown-text {
+  font-size: 22rpx;
+  color: #92400e;
+  opacity: 0.8;
+}
+
+.cost-warning {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20rpx;
+  padding: 16rpx 20rpx;
+  background: #fed7d7;
+  border-radius: 12rpx;
+  border-left: 6rpx solid #f56565;
+}
+
+.warning-icon {
+  font-size: 28rpx;
+  margin-right: 12rpx;
+}
+
+.warning-text {
+  font-size: 26rpx;
+  color: #c53030;
+  font-weight: 500;
+}
+
+/* 旧版成本警告样式 - 备用 */
+.cost-warning-old {
+  display: flex;
+  align-items: center;
+  margin-top: 16rpx;
+  padding: 12rpx 16rpx;
+  background: #fef2f2;
+  border-radius: 12rpx;
+  border: 1rpx solid #fecaca;
+}
+
+.warning-icon {
+  font-size: 24rpx;
+  margin-right: 8rpx;
+}
+
+.warning-text {
+  font-size: 24rpx;
+  color: #dc2626;
+  flex: 1;
+}
+
+
+
+/* 底部固定区域 */
+.footer {
+  background: white;
+  padding: 30rpx;
+  box-shadow: 0 -8rpx 32rpx rgba(0, 0, 0, 0.1);
+  border-top-left-radius: 32rpx;
+  border-top-right-radius: 32rpx;
+  margin-top: auto;
+}
+
+/* 购买摘要 */
+.purchase-summary {
+  margin-bottom: 24rpx;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 24rpx;
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  border-radius: 16rpx;
+  border: 2rpx solid #e2e8f0;
+}
+
+.summary-name {
+  font-size: 30rpx;
+  color: #2d3748;
+  font-weight: 600;
+  flex: 1;
+}
+
+.summary-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.usd-price {
+  font-size: 32rpx;
+  color: #48bb78;
+  font-weight: 700;
+}
+
+.rmb-price {
+  font-size: 24rpx;
+  color: #718096;
+  margin-top: 4rpx;
+}
+
+/* 提交按钮 */
+.submit-container {
+  position: relative;
+}
+
+.submit-button {
+  width: 100%;
+  height: 96rpx;
+  background: linear-gradient(135deg, #ff7b39 0%, #ff9854 100%);
+  border: none;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(255, 123, 57, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.submit-button:hover::before {
+  left: 100%;
+}
+
+.submit-button:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 4rpx 16rpx rgba(255, 123, 57, 0.4);
+}
+
+.submit-button[disabled] {
+  background: #cbd5e0;
+  box-shadow: none;
+  transform: none;
+}
+
+.submit-button[disabled]::before {
+  display: none;
+}
+
+.submit-text {
+  color: white;
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-right: 12rpx;
+}
+
+.submit-icon {
+  color: white;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.submit-button[disabled] .submit-text,
+.submit-button[disabled] .submit-icon {
+  color: #a0aec0;
+}
+
+/* 响应式设计 */
+@media (max-width: 750rpx) {
+  .header {
+    padding: 40rpx 30rpx 30rpx;
+  }
+  
+  .header-title {
+    font-size: 42rpx;
+  }
+  
+  .main-content {
+    padding: 0 20rpx 20rpx;
+  }
+  
+  .card {
+    margin-bottom: 20rpx;
+  }
+  
+  .footer {
+    padding: 20rpx;
+  }
+}
+
+/* 小屏幕优化 - 数量和单价垂直排列 */
+@media (max-width: 600rpx) {
+  .price-input-row {
+    flex-direction: column;
+    gap: 32rpx;
+    align-items: center; /* 小屏幕下也居中 */
+  }
+  
+  .price-input-item {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 400rpx; /* 小屏幕下适当增加最大宽度 */
+  }
+  
+  /* 调整输入框在小屏幕下的字体大小 */
+  .quantity-input,
+  .price-input {
+    font-size: 30rpx;
+  }
+  
+  .currency-symbol {
+    font-size: 30rpx;
+  }
+}
+
+/* 微交互动画 */
+.card {
+  animation: slideUp 0.6s ease forwards;
+  opacity: 0;
+  transform: translateY(30rpx);
+}
+
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
+.card:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 焦点状态增强 */
+.modern-input:focus,
+.modern-textarea:focus,
+.picker-container:active {
+  animation: focusPulse 0.3s ease;
+}
+
+@keyframes focusPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
